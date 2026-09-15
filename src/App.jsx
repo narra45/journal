@@ -1,10 +1,11 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Home from "./pages/Home"
-import Login from "./components/Login"
-import Register from "./components/Register"
-import DashboardLayout from "./pages/DashboardLayout"
-import Dashboard from "./pages/Dashboard"
-import Profile from "./pages/Profile"
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Login from './components/Login'
+import Register from './components/Register'
+import ForgotPassword from './components/ForgotPassword'
+import DashboardLayout from './pages/DashboardLayout'
+import Dashboard from './pages/Dashboard'
+import Profile from './pages/Profile'
 
 
 
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/" element={<Home/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
+                <Route path="/forgot-password" element={<ForgotPassword />} />
 
                 <Route path="/dashboardLayout" element={<DashboardLayout/>}>
                   <Route index element={<Dashboard/>} />
