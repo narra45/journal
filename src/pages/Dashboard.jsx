@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import AddJournal from '../components/AddJournal'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journal-hbp1.onrender.com/api'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
 
 export default function Dashboard() {
   const [entries, setEntries] = useState([])
@@ -18,8 +18,18 @@ export default function Dashboard() {
     setLoading(true)
     setError('')
     try {
-      const res = await axios.get(`${API_BASE}/journal`)
-      setEntries(res.data)
+      let lastError
+      for (const url of getApiCandidates('/journal')) {
+        try {
+          const res = await axios.get(url)
+          setEntries(res.data)
+          return
+        } catch (err) {
+          lastError = err
+          if (err.response?.status !== 404) throw err
+        }
+      }
+      throw lastError
     } catch (err) {
       setError('Could not load journal entries.')
     } finally {
@@ -29,9 +39,19 @@ export default function Dashboard() {
 
   const handleSave = async (form) => {
     try {
-      const res = await axios.post(`${API_BASE}/journal`, form)
-      setEntries(prev => [res.data, ...prev])
-      setShowForm(false)
+      let lastError
+      for (const url of getApiCandidates('/journal')) {
+        try {
+          const res = await axios.post(url, form)
+          setEntries(prev => [res.data, ...prev])
+          setShowForm(false)
+          return
+        } catch (err) {
+          lastError = err
+          if (err.response?.status !== 404) throw err
+        }
+      }
+      throw lastError
     } catch (err) {
       setError('Could not save entry.')
     }
@@ -39,8 +59,18 @@ export default function Dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_BASE}/journal/${id}`)
-      setEntries(prev => prev.filter(x => x.id !== id))
+      let lastError
+      for (const url of getApiCandidates(`/journal/${id}`)) {
+        try {
+          await axios.delete(url)
+          setEntries(prev => prev.filter(x => x.id !== id))
+          return
+        } catch (err) {
+          lastError = err
+          if (err.response?.status !== 404) throw err
+        }
+      }
+      throw lastError
     } catch (err) {
       setError('Could not delete entry.')
     }

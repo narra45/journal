@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journal-hbp1.onrender.com/api'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
+const getApiCandidates = (path) => {
+  const base = API_BASE.replace(/\/+$/, '')
+  return [`${base}${path}`, `${base}/api${path}`]
+}
 
 const colors = {
   bgGradient: 'linear-gradient(180deg,#041124 0%, #071226 100%)',
@@ -110,13 +114,23 @@ function Register() {
 
     setLoading(true)
     try {
-      await axios.post(`${API_BASE}/auth/register`, {
-        name: formData.name,
-        email: formData.email,
-        mobile: formData.mobile,
-        password: formData.password
-      })
-      navigate('/login')
+      let lastError
+      for (const url of getApiCandidates('/auth/register')) {
+        try {
+          await axios.post(url, {
+            name: formData.name,
+            email: formData.email,
+            mobile: formData.mobile,
+            password: formData.password
+          })
+          navigate('/login')
+          return
+        } catch (err) {
+          lastError = err
+          if (err.response?.status !== 404) throw err
+        }
+      }
+      throw lastError
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.')
     } finally {

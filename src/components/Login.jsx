@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journal-hbp1.onrender.com/api'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
+const getApiCandidates = (path) => {
+  const base = API_BASE.replace(/\/+$/, '')
+  return [`${base}${path}`, `${base}/api${path}`]
+}
 
 const colors = {
   bgGradient: 'linear-gradient(180deg,#041124 0%, #071226 100%)',
@@ -108,17 +112,27 @@ function Login() {
 
     setLoading(true)
     try {
-      const res = await axios.post(`${API_BASE}/auth/login`, formData)
-      const user = {
-        id: res.data.id || Date.now(),
-        name: res.data.name || formData.email.split('@')[0],
-        email: formData.email,
-        password: formData.password,
-        mobile: res.data.mobile || '',
-        image: res.data.image || ''
+      let lastError
+      for (const url of getApiCandidates('/auth/login')) {
+        try {
+          const res = await axios.post(url, formData)
+          const user = {
+            id: res.data.id || Date.now(),
+            name: res.data.name || formData.email.split('@')[0],
+            email: formData.email,
+            password: formData.password,
+            mobile: res.data.mobile || '',
+            image: res.data.image || ''
+          }
+          localStorage.setItem('user', JSON.stringify(user))
+          navigate('/dashboardLayout')
+          return
+        } catch (err) {
+          lastError = err
+          if (err.response?.status !== 404) throw err
+        }
       }
-      localStorage.setItem('user', JSON.stringify(user))
-      navigate('/dashboardLayout')
+      throw lastError
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid email or password')
     } finally {

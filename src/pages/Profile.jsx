@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journal-hbp1.onrender.com/api'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
 
 const Profile = () => {
   const navigate = useNavigate()
@@ -45,13 +45,24 @@ const Profile = () => {
       }
 
       if (user.id) {
-        const res = await axios.put(`${API_BASE}/users/${user.id}`, payload)
-        setUser(res.data)
-        localStorage.setItem('user', JSON.stringify(res.data))
+        let lastError
+        for (const url of getApiCandidates(`/users/${user.id}`)) {
+          try {
+            const res = await axios.put(url, payload)
+            setUser(res.data)
+            localStorage.setItem('user', JSON.stringify(res.data))
+            setMessage('Profile saved successfully')
+            return
+          } catch (err) {
+            lastError = err
+            if (err.response?.status !== 404) throw err
+          }
+        }
+        throw lastError
       } else {
         localStorage.setItem('user', JSON.stringify(payload))
+        setMessage('Profile saved successfully')
       }
-      setMessage('Profile saved successfully')
     } catch (err) {
       setMessage('Could not save profile')
     } finally {
