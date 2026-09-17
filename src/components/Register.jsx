@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
-const API_BASE = 'https://journal-hbp1.onrender.com/api'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journal-hbp1.onrender.com/api'
 
 const colors = {
   bgGradient: 'linear-gradient(180deg,#041124 0%, #071226 100%)',
