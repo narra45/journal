@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import AddJournal from '../components/AddJournal'
 
-const API_BASE = 'http://localhost:8080/api'
+const API_BASE = 'https://journal-hbp1.onrender.com/api'
 
 export default function Dashboard() {
   const [entries, setEntries] = useState([])
