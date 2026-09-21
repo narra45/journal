@@ -6,7 +6,11 @@ import axios from 'axios'
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
 const getApiCandidates = (path) => {
   const base = API_BASE.replace(/\/+$/, '')
-  return [`${base}${path}`, `${base}/api${path}`]
+  return [
+    `${base}/api${path}`,
+    `${base}/api/v1${path}`,
+    `${base}${path}`
+  ]
 }
 
 const colors = {

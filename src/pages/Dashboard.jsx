@@ -3,6 +3,14 @@ import axios from 'axios'
 import AddJournal from '../components/AddJournal'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
+const getApiCandidates = (path) => {
+  const base = API_BASE.replace(/\/+$/, '')
+  return [
+    `${base}/api${path}`,
+    `${base}/api/v1${path}`,
+    `${base}${path}`
+  ]
+}
 
 export default function Dashboard() {
   const [entries, setEntries] = useState([])
