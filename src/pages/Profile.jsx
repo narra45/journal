@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journalbackend-1.onrender.com'
 
 const Profile = () => {
   const navigate = useNavigate()

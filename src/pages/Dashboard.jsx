@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import AddJournal from '../components/AddJournal'
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journalbackend-1.onrender.com'
 
 export default function Dashboard() {
   const [entries, setEntries] = useState([])
