@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
 // Prefer setting `VITE_API_BASE_URL` in .env; fallback uses the correct hostname
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journalbackend-1.onrender.com'
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://journnalbackend-1.onrender.com'
 const getApiCandidates = (path) => {
   const base = API_BASE.replace(/\/+$/, '')
   return [`${base}${path}`, `${base}/api${path}`]
